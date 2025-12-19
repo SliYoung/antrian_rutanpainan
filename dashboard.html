@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Antrian | Rutan Kelas IIB Painan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:#f3f4f6;margin:0}
+
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  color:#fff;
+  padding:18px 22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.2);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:42px}
+.brand h1{font-size:18px;margin:0}
+.logout{
+  background:#dc2626;
+  border:none;
+  padding:10px 16px;
+  color:#fff;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* CONTENT */
+.container{padding:24px}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:16px;
+  margin-bottom:20px;
+}
+.stat{
+  background:#fff;
+  padding:18px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+  text-align:center;
+}
+.stat h3{margin:0;color:#6b7280;font-size:14px}
+.stat h1{margin:10px 0 0;font-size:32px;color:#1e3a8a}
+
+/* CARD */
+.card{
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 15px 30px rgba(0,0,0,.1);
+  padding:20px;
+}
+h2{text-align:center;color:#1e3a8a}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin-top:16px}
+th,td{
+  padding:12px;
+  font-size:14px;
+  text-align:center;
+  border-bottom:1px solid #e5e7eb;
+}
+th{background:#2563eb;color:#fff}
+tr:hover{background:#f9fafb}
+.status-menunggu{color:#d97706;font-weight:600}
+.status-dipanggil{color:#059669;font-weight:600}
+
+button{
+  padding:7px 14px;
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+button:disabled{background:#9ca3af}
+
+/* PRINT */
+#printArea{display:none;font-family:Arial}
+</style>
+</head>
+
+<body>
+
+<script>
+if(localStorage.getItem("login")!=="true"){
+  window.location.href="login.html";
+}
+</script>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="brand">
+    <img src="https://i.imgur.com/GifnqrQ.png">
+    <h1>Dashboard Antrian Rutan Kelas IIB Painan</h1>
+  </div>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><h3>Total Hari Ini</h3><h1 id="total">0</h1></div>
+  <div class="stat"><h3>Dipanggil</h3><h1 id="dipanggil">0</h1></div>
+  <div class="stat"><h3>Menunggu</h3><h1 id="menunggu">0</h1></div>
+</div>
+
+<!-- PILIH SUARA -->
+<div style="text-align:right;margin-bottom:10px">
+  <label><b>Suara:</b></label>
+  <select id="voiceType" style="padding:6px;border-radius:6px">
+    <option value="female">Wanita</option>
+    <option value="male">Pria</option>
+  </select>
+</div>
+
+<!-- TABLE -->
+<div class="card">
+<h2>Data Antrian Kunjungan</h2>
+
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>Nama</th>
+<th>WBP</th>
+<th>Tanggal</th>
+<th>Antrian</th>
+<th>Status</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="dataAntrian"></tbody>
+</table>
+</div>
+</div>
+
+<!-- PRINT -->
+<div id="printArea">
+<h3 style="text-align:center">RUTAN KELAS IIB PAINAN</h3>
+<p style="text-align:center">Nomor Antrian Kunjungan</p>
+<hr>
+<p><b>Nama</b>: <span id="pNama"></span></p>
+<p><b>WBP</b>: <span id="pWbp"></span></p>
+<p><b>Tanggal</b>: <span id="pTanggal"></span></p>
+<h1 style="text-align:center;font-size:40px" id="pAntrian"></h1>
+<hr>
+<p style="text-align:center;font-size:12px">Harap datang sesuai jadwal</p>
+</div>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbwWSDyO29MhHfwED8-NGV5PuvW9wn5Hl9pltHvzitMYZZ10WFBaKoyzGhRkPb1jauvU/exec";
+
+/* =====================
+   🔊 LOAD VOICE (WAJIB)
+===================== */
+let VOICES = [];
+
+function loadVoices(){
+  VOICES = speechSynthesis.getVoices();
+}
+
+speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+/* =====================
+   📊 LOAD DATA
+===================== */
+function loadData(){
+fetch(API_URL)
+.then(r=>r.json())
+.then(data=>{
+  let total=0,dip=0,men=0;
+  dataAntrian.innerHTML="";
+
+  data.forEach((d,i)=>{
+    total++;
+    d.status==="Dipanggil"?dip++:men++;
+
+    dataAntrian.innerHTML+=`
+    <tr>
+      <td>${i+1}</td>
+      <td>${d.nama}</td>
+      <td>${d.wbp}</td>
+      <td>${d.tanggal}</td>
+      <td><b>${d.antrian}</b></td>
+      <td class="status-${d.status.toLowerCase()}">${d.status}</td>
+      <td>
+        ${d.status==="Menunggu"
+        ? `<button onclick="panggil(${d.id},'${d.antrian}','${d.nama}')">Panggil</button>`
+        : `<button disabled>Dipanggil</button>`}
+        <button onclick="cetak('${d.nama}','${d.wbp}','${d.tanggal}','${d.antrian}')">🖨️</button>
+      </td>
+    </tr>`;
+  });
+
+  total.innerText=total;
+  dipanggil.innerText=dip;
+  menunggu.innerText=men;
+});
+}
+
+/* =====================
+   🔊 SUARA PANGGILAN
+===================== */
+function suara(antrian,nama){
+  if(!VOICES.length){
+    alert("Voice belum siap, refresh halaman");
+    return;
+  }
+
+  const tipe = document.getElementById("voiceType").value;
+
+  let voice = VOICES.find(v => v.lang === "id-ID");
+  if(!voice) voice = VOICES[0];
+
+  const msg = new SpeechSynthesisUtterance();
+  msg.text = `Nomor antrian ${antrian}, atas nama ${nama}, silakan menuju loket`;
+  msg.voice = voice;
+  msg.lang = "id-ID";
+  msg.rate = 0.9;
+  msg.pitch = tipe === "male" ? 0.9 : 1.2;
+
+  speechSynthesis.cancel(); // 🔥 penting
+  speechSynthesis.speak(msg);
+}
+
+/* =====================
+   📢 PANGGIL
+===================== */
+function panggil(row, antrian, nama){
+fetch(API_URL,{
+  method:"POST",
+  body:JSON.stringify({action:"panggil",row})
+})
+.then(()=>{
+  suara(antrian,nama);
+  loadData();
+});
+}
+
+/* =====================
+   🖨️ CETAK
+===================== */
+function cetak(n,w,t,a){
+pNama.innerText=n;
+pWbp.innerText=w;
+pTanggal.innerText=t;
+pAntrian.innerText=a;
+
+const isi=document.getElementById("printArea").innerHTML;
+const halaman=document.body.innerHTML;
+
+document.body.innerHTML=isi;
+window.print();
+document.body.innerHTML=halaman;
+location.reload();
+}
+
+/* =====================
+   🚪 LOGOUT
+===================== */
+function logout(){
+localStorage.removeItem("login");
+window.location.href="login.html";
+}
+
+/* INIT */
+loadData();
+setInterval(loadData,5000);
+</script>
+
+
+</body>
+</html>

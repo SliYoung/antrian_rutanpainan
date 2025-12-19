@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Antrian Kunjungan | Rutan Kelas IIB Painan</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+margin: 0;
+font-family: 'Inter', sans-serif;
+background: linear-gradient(135deg, #1e3a8a, #2563eb);
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 20px;
+}
+
+.container {
+background: #ffffff;
+width: 100%;
+max-width: 420px;
+border-radius: 18px;
+box-shadow: 0 25px 50px rgba(0,0,0,0.18);
+padding: 32px;
+animation: cardIn 0.8s ease;
+}
+
+@keyframes cardIn {
+from { opacity: 0; transform: scale(0.95) translateY(30px); }
+to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.logo {
+display: flex;
+justify-content: center;
+margin-bottom: 12px;
+}
+
+.logo img {
+width: 80px;
+animation: float 3s ease-in-out infinite, glow 2.5s ease-in-out infinite;
+}
+
+@keyframes float {
+0%,100% { transform: translateY(0); }
+50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+0%,100% { filter: drop-shadow(0 0 0 rgba(37,99,235,0.4)); }
+50% { filter: drop-shadow(0 0 12px rgba(37,99,235,0.8)); }
+}
+
+.header {
+text-align: center;
+margin-bottom: 24px;
+}
+
+.header h2 {
+margin: 6px 0 0;
+color: #1e3a8a;
+font-weight: 700;
+}
+
+.header p {
+margin-top: 6px;
+font-size: 14px;
+color: #6b7280;
+}
+
+.form-group {
+margin-bottom: 14px;
+}
+
+label {
+font-size: 13px;
+font-weight: 600;
+color: #374151;
+}
+
+input {
+width: 100%;
+padding: 12px 14px;
+margin-top: 6px;
+border-radius: 12px;
+border: 1px solid #d1d5db;
+font-size: 14px;
+transition: all 0.25s ease;
+}
+
+input:focus {
+outline: none;
+border-color: #2563eb;
+box-shadow: 0 0 0 4px rgba(37,99,235,0.2);
+}
+
+button {
+width: 100%;
+padding: 15px;
+margin-top: 20px;
+background: linear-gradient(135deg, #2563eb, #1d4ed8);
+border: none;
+border-radius: 14px;
+color: #fff;
+font-size: 15px;
+font-weight: 600;
+cursor: pointer;
+}
+
+button:disabled {
+background: #9ca3af;
+cursor: not-allowed;
+}
+
+.result {
+margin-top: 22px;
+background: #ecfdf5;
+border: 1px solid #10b981;
+border-radius: 14px;
+padding: 16px;
+text-align: center;
+color: #065f46;
+font-weight: 600;
+display: none;
+}
+
+footer {
+text-align: center;
+font-size: 12px;
+color: #9ca3af;
+margin-top: 22px;
+}
+
+/* AREA CETAK */
+#printArea {
+display: none;
+font-family: Arial;
+max-width: 300px;
+margin: auto;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="logo">
+<img src="https://i.imgur.com/GifnqrQ.png" alt="Logo Rutan">
+</div>
+
+<div class="header">
+<h2>Antrian Kunjungan Online</h2>
+<p>Rumah Tahanan Kelas IIB Painan</p>
+</div>
+
+<div class="form-group">
+<label>Nama Pengunjung</label>
+<input type="text" id="nama">
+</div>
+
+<div class="form-group">
+<label>No WhatsApp</label>
+<input type="text" id="wa">
+</div>
+
+<div class="form-group">
+<label>Nama Warga Binaan</label>
+<input type="text" id="wbp">
+</div>
+
+<div class="form-group">
+<label>Tanggal Kunjungan</label>
+<input type="date" id="tanggal" readonly style="background:#f3f4f6;cursor:not-allowed;">
+
+</div>
+
+<button id="btnDaftar" onclick="kirimData()">Daftar Antrian</button>
+
+<div class="result" id="hasil"></div>
+
+<button id="btnCetak" onclick="cetakAntrian()" style="display:none;margin-top:12px;">
+🖨️ Cetak Nomor Antrian
+</button>
+
+<footer>
+© 2025 Rutan Kelas IIB Painan
+</footer>
+
+</div>
+
+<!-- STRUK CETAK ANTRIAN -->
+<div id="printArea" style="
+display:none;
+font-family: Arial, sans-serif;
+max-width:280px;
+margin:auto;
+padding:14px;
+background:#fff;
+border:1px solid #ddd;
+">
+
+  <!-- HEADER -->
+  <div style="text-align:center;margin-bottom:6px;">
+    <img src="https://i.imgur.com/GifnqrQ.png" style="width:46px;margin-bottom:4px;">
+    <div style="font-size:15px;font-weight:700;letter-spacing:0.5px;">
+      RUMAH TAHANAN KELAS IIB PAINAN
+    </div>
+    <div style="font-size:12px;margin-top:2px;">
+      Nomor Antrian Kunjungan
+    </div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid #000;margin:8px 0;">
+
+  <!-- DATA -->
+  <table style="width:100%;font-size:12px;">
+    <tr>
+      <td style="width:32%;">Nama</td>
+      <td>: <span id="pNama"></span></td>
+    </tr>
+    <tr>
+      <td>WBP</td>
+      <td>: <span id="pWbp"></span></td>
+    </tr>
+    <tr>
+      <td>Tanggal</td>
+      <td>: <span id="pTanggal"></span></td>
+    </tr>
+  </table>
+
+  <hr style="border:none;border-top:1px dashed #000;margin:10px 0;">
+
+  <!-- NOMOR ANTRIAN -->
+  <div style="text-align:center;">
+    <div style="font-size:12px;letter-spacing:1px;">
+      NOMOR ANTRIAN
+    </div>
+    <div id="pAntrian" style="
+      font-size:44px;
+      font-weight:800;
+      margin:6px 0;
+      letter-spacing:2px;
+    ">
+    </div>
+  </div>
+
+  <hr style="border:none;border-top:1px dashed #000;margin:10px 0;">
+
+  <!-- FOOTER -->
+  <div style="text-align:center;font-size:11px;line-height:1.4;">
+    Harap datang sesuai jadwal<br>
+    dan mematuhi ketentuan yang berlaku
+  </div>
+
+  <div style="text-align:center;font-size:10px;margin-top:6px;">
+    © 2025 Rutan Kelas IIB Painan
+  </div>
+
+</div>
+
+
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbwWSDyO29MhHfwED8-NGV5PuvW9wn5Hl9pltHvzitMYZZ10WFBaKoyzGhRkPb1jauvU/exec";
+
+function kirimData() {
+  const btn = document.getElementById("btnDaftar");
+  if (btn.disabled) return;
+
+  const data = {
+    nama: nama.value,
+    wa: wa.value,
+    wbp: wbp.value,
+    tanggal: tanggal.value
+  };
+
+  if (!data.nama || !data.wa || !data.wbp || !data.tanggal) {
+    alert("Semua data wajib diisi");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerText = "Mengambil Nomor...";
+
+  fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(res => {
+    hasil.style.display = "block";
+    hasil.innerHTML = `
+      Pendaftaran berhasil ✅<br>
+      Nomor Antrian Anda:<br>
+      <h2>${res.antrian}</h2>
+    `;
+
+    // isi data cetak
+    pNama.innerText = data.nama;
+    pWbp.innerText = data.wbp;
+    pTanggal.innerText = data.tanggal;
+    pAntrian.innerText = res.antrian;
+
+    btn.innerText = "Antrian Sudah Diambil";
+    btnCetak.style.display = "block";
+
+    nama.value = wa.value = wbp.value = tanggal.value = "";
+  })
+  .catch(() => {
+    alert("Gagal mengambil antrian");
+    btn.disabled = false;
+    btn.innerText = "Daftar Antrian";
+  });
+}
+
+function cetakAntrian() {
+  const isi = document.getElementById("printArea").innerHTML;
+  const halaman = document.body.innerHTML;
+
+  document.body.innerHTML = isi;
+  window.print();
+  document.body.innerHTML = halaman;
+  location.reload();
+}
+document.addEventListener("DOMContentLoaded", function () {
+  const tgl = document.getElementById("tanggal");
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+
+  tgl.value = `${yyyy}-${mm}-${dd}`;
+  tgl.setAttribute("readonly", true);
+});
+</script>
+
+</body>
+</html>

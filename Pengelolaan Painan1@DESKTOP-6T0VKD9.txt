@@ -1,0 +1,177 @@
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjngan
+$ git init
+Initialized empty Git repository in D:/Rutan Painan/Survei Layanan Kunjungan/.gt/
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjngan (master)
+$ git add .
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunj (master)
+$ git commit -m "Initial commit survei rutan painan"
+Author identity unknown
+
+*** Please tell me who you are.
+
+Run
+
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+
+fatal: unable to auto-detect email address (got 'Pengelolaan Painan1@DESKTOP-6T.(none)')
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunj (master)
+$ ^C
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunj (master)
+$ $ git commit -m "Initial commit survei rutan painan"
+Author identity unknown
+
+*** Please tell me who you are.
+
+Run
+
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+
+fatal: unable to auto-detect email address (got 'Pengelolaan Painan1@DESKTOP-6T
+bash: $: command not found
+
+bash: Author: command not found
+bash: admin.html: command not found
+bash: Run: command not found
+bash: syntax error near unexpected token `('
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (master)
+$
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (master)
+$ git config --global user.name "Rutan Kelas IIB Painan"
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (master)
+$ git config --global --list
+user.email=you@example.com
+user.name=Rutan Kelas IIB Painan
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (master)
+$ git config --global user.email "admin@rutanpainan.go.id"
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (master)
+$ git config --global --list
+user.email=admin@rutanpainan.go.id
+user.name=Rutan Kelas IIB Painan
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (master)
+$ git add .
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (master)
+$ git commit -m "Initial commit survei rutan painan"
+[master (root-commit) 94981f5] Initial commit survei rutan painan
+ 3 files changed, 408 insertions(+)
+ create mode 100644 admin.html
+ create mode 100644 dashboard.html
+ create mode 100644 index.html
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (master)
+$ git branch -M main
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git push -u origin main
+fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git remote -v
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git remote add origin https://github.com/SliYoung/survei_rutanpainan.gi
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git branch -M main
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git push -u origin main
+info: please complete authentication in your browser...
+remote: Repository not found.
+fatal: repository 'https://github.com/SliYoung/survei_rutanpainan.gi/' not found
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git push -u origin main
+info: please complete authentication in your browser...
+remote: Repository not found.
+fatal: repository 'https://github.com/SliYoung/survei_rutanpainan.gi/' not found
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ ^C
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ ^C
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git remote add origin https://github.com/SliYoung/survei_rutanpainan.git
+error: remote origin already exists.
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git remote -v
+origin  https://github.com/SliYoung/survei_rutanpainan.gi (fetch)
+origin  https://github.com/SliYoung/survei_rutanpainan.gi (push)
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git remote remove origin
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git remote -v
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git remote add origin https://github.com/SliYoung/survei_rutanpainan.git
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git remote -v
+origin  https://github.com/SliYoung/survei_rutanpainan.git (fetch)
+origin  https://github.com/SliYoung/survei_rutanpainan.git (push)
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git branch -M main
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git push -u origin main
+info: please complete authentication in your browser...
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 5.30 KiB | 5.30 MiB/s, done.
+Total 5 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://github.com/SliYoung/survei_rutanpainan.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git add .
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git commit -m "Tambah grafik puas tidak puas"
+[main 4e9a732] Tambah grafik puas tidak puas
+ 2 files changed, 54 insertions(+), 2 deletions(-)
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$ git push
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 1.16 KiB | 1.16 MiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/SliYoung/survei_rutanpainan.git
+   94981f5..4e9a732  main -> main
+
+Pengelolaan Painan1@DESKTOP-6T0VKD9 MINGW64 /d/Rutan Painan/Survei Layanan Kunjungan (main)
+$
