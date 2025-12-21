@@ -4,14 +4,13 @@
 <meta charset="UTF-8">
 <title>Dashboard Antrian | Rutan Kelas IIB Painan</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<link rel="icon" type="image/png" href="https://i.imgur.com/GifnqrQ.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box}
 body{font-family:Inter,sans-serif;background:#f3f4f6;margin:0}
 
-/* HEADER */
 .header{
   background:linear-gradient(135deg,#1e3a8a,#2563eb);
   color:#fff;
@@ -33,10 +32,8 @@ body{font-family:Inter,sans-serif;background:#f3f4f6;margin:0}
   font-weight:600;
 }
 
-/* CONTENT */
 .container{padding:24px}
 
-/* STATS */
 .stats{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
@@ -53,7 +50,6 @@ body{font-family:Inter,sans-serif;background:#f3f4f6;margin:0}
 .stat h3{margin:0;color:#6b7280;font-size:14px}
 .stat h1{margin:10px 0 0;font-size:32px;color:#1e3a8a}
 
-/* CARD */
 .card{
   background:#fff;
   border-radius:16px;
@@ -62,7 +58,6 @@ body{font-family:Inter,sans-serif;background:#f3f4f6;margin:0}
 }
 h2{text-align:center;color:#1e3a8a}
 
-/* TABLE */
 table{width:100%;border-collapse:collapse;margin-top:16px}
 th,td{
   padding:12px;
@@ -71,8 +66,9 @@ th,td{
   border-bottom:1px solid #e5e7eb;
 }
 th{background:#2563eb;color:#fff}
+
 .status-menunggu{color:#d97706;font-weight:600}
-.status-dipanggil{color:#059669;font-weight:600}
+.status-selesai{color:#6b7280;font-weight:600}
 
 button{
   padding:7px 14px;
@@ -94,7 +90,6 @@ if(localStorage.getItem("login")!=="true"){
 }
 </script>
 
-<!-- HEADER -->
 <div class="header">
   <div class="brand">
     <img src="https://i.imgur.com/GifnqrQ.png">
@@ -105,14 +100,12 @@ if(localStorage.getItem("login")!=="true"){
 
 <div class="container">
 
-<!-- STATS -->
 <div class="stats">
   <div class="stat"><h3>Total Hari Ini</h3><h1 id="total">0</h1></div>
-  <div class="stat"><h3>Dipanggil</h3><h1 id="dipanggil">0</h1></div>
   <div class="stat"><h3>Menunggu</h3><h1 id="menunggu">0</h1></div>
+  <div class="stat"><h3>Selesai</h3><h1 id="selesaiCount">0</h1></div>
 </div>
 
-<!-- KONTROL SUARA -->
 <div style="display:flex;justify-content:space-between;margin-bottom:12px">
   <button id="btnSound" onclick="aktifkanSuara()"
     style="background:#059669;padding:10px 16px;border-radius:10px;font-weight:600">
@@ -125,7 +118,6 @@ if(localStorage.getItem("login")!=="true"){
   </select>
 </div>
 
-<!-- TABLE -->
 <div class="card">
 <h2>Data Antrian Kunjungan</h2>
 <table>
@@ -146,96 +138,111 @@ if(localStorage.getItem("login")!=="true"){
 </div>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbwWSDyO29MhHfwED8-NGV5PuvW9wn5Hl9pltHvzitMYZZ10WFBaKoyzGhRkPb1jauvU/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbxMflUwnGdQpbJeO8TDj-y0ZLvQyiVI8ATmPN_0akcQ9SRRZSbdFYbWKnns3_cIC5gY/exec";
 
-/* 🔊 VOICE */
 let voicesReady=false;
 let VOICES=[];
 
-speechSynthesis.onvoiceschanged=()=>{
-  VOICES=speechSynthesis.getVoices();
-};
+speechSynthesis.onvoiceschanged=()=>{ VOICES=speechSynthesis.getVoices(); };
 
-/* 🔓 AKTIFKAN SUARA */
 function aktifkanSuara(){
-  speechSynthesis.cancel();
-  speechSynthesis.resume(); // 🔥 PENTING
-
   const u=new SpeechSynthesisUtterance(
-    "Selamat datang di Rumah tahanan Kelas 2B Painan, Sistem antrian layanan akan segera dimulai.Mohon menunggu dan memperhatikan nomor antrian yang akan dipanggil sesuai urutan.Terima kasih."
+    "Selamat datang di Rumah Tahanan Negara Kelas IIB Painan.,Demi kelancaran dan kenyamanan bersama, kami akan segera memulai layanan antrian.,Silakan memperhatikan layar informasi dan menunggu hingga nomor antrian Anda dipanggil.,Terima kasih atas perhatian dan kerja samanya."
   );
   u.lang="id-ID";
   speechSynthesis.speak(u);
-
   voicesReady=true;
   btnSound.innerText="✅ Suara Aktif";
   btnSound.disabled=true;
 }
 
-/* 🔊 SUARA PANGGIL */
 function suara(antrian,nama){
-  if(!voicesReady){
-    alert("Aktifkan suara terlebih dahulu");
-    return;
-  }
-
-  let v=VOICES.find(v=>v.lang.includes("id")) || VOICES[0];
-
+  if(!voicesReady){ alert("Aktifkan suara terlebih dahulu"); return; }
+  let v=VOICES.find(v=>v.lang.includes("id"))||VOICES[0];
   const msg=new SpeechSynthesisUtterance(
-    `Nomor antrian ${antrian}, atas nama ${nama}, silakan menuju PTSP`
+    `Nomor antrian ,,,,${antrian},,,, atas nama ${nama}, silakan menuju keruangan PTSP`
   );
-  msg.voice=v;
   msg.lang="id-ID";
   msg.rate=0.85;
   msg.pitch=voiceType.value==="male"?0.8:1.2;
-
+  msg.voice=v;
   speechSynthesis.cancel();
   speechSynthesis.speak(msg);
 }
 
-/* 📊 LOAD DATA */
 function loadData(){
-fetch(API_URL)
-.then(r=>r.json())
-.then(data=>{
-  let t=0,d=0,m=0;
+fetch(API_URL).then(r=>r.json()).then(data=>{
+  let t=0,m=0,s=0;
   dataAntrian.innerHTML="";
   data.forEach((x,i)=>{
-    t++; x.status==="Dipanggil"?d++:m++;
+    t++; if(x.status==="Menunggu") m++; if(x.status==="Selesai") s++;
+
     dataAntrian.innerHTML+=`
-    <tr>
-      <td>${i+1}</td>
-      <td>${x.nama}</td>
-      <td>${x.wbp}</td>
-      <td>${x.tanggal}</td>
-      <td><b>${x.antrian}</b></td>
-      <td class="status-${x.status.toLowerCase()}">${x.status}</td>
-      <td>
-        ${x.status==="Menunggu"
-        ? `<button onclick="panggil(${x.id},'${x.antrian}','${x.nama}')">Panggil</button>`
-        : `<button disabled>Dipanggil</button>`}
-      </td>
-    </tr>`;
+<tr>
+<td>${i+1}</td>
+<td>${x.nama}</td>
+<td>${x.wbp}</td>
+<td>${x.tanggal}</td>
+<td><b>${x.antrian}</b></td>
+<td class="status-${x.status.toLowerCase()}">${x.status}</td>
+<td>
+  ${x.status!=="Selesai" ? `
+    <button onclick="suara('${x.antrian}','${x.nama}')" style="background:#059669">🔊 Panggil</button><br><br>
+    <button onclick="cetakStruk('${x.nama}','${x.wbp}','${x.antrian}','${x.tanggal}')" style="background:#0ea5e9">🧾 Cetak</button><br><br>
+    <button onclick="selesai(${x.id})" style="background:#6b7280">✅ Selesai</button>
+  ` : `
+    <button disabled>🔇 Panggil</button><br><br>
+    <button disabled>🧾 Cetak</button><br><br>
+    <button disabled>Selesai</button>
+  `}
+</td>
+</tr>`;
   });
   total.innerText=t;
-  dipanggil.innerText=d;
   menunggu.innerText=m;
+  selesaiCount.innerText=s;
 });
 }
 
-/* 📢 PANGGIL (SUARA DULU BARU FETCH) */
-function panggil(row,antrian,nama){
-  suara(antrian,nama); // 🔥 HARUS DULU
+function selesai(row){
+  fetch(API_URL,{method:"POST",body:JSON.stringify({action:"selesai",row})})
+  .then(()=>loadData());
+}
 
-  fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({action:"panggil",row})
-  }).then(()=>loadData());
+function cetakStruk(nama,wbp,antrian,tanggal){
+  const w=window.open("","_blank","width=350,height=600");
+  w.document.write(`
+<html><head><title>Struk Antrian</title>
+<style>
+body{font-family:Inter,Arial;text-align:center;margin:0;padding:10px}
+.box{border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.15);padding:16px}
+img{width:70px}
+.antrian{font-size:46px;font-weight:700;margin:10px 0}
+hr{border-top:1px dashed #ccc}
+small{color:#6b7280}
+</style></head>
+<body onload="window.print();window.close()">
+<div class="box">
+<img src="https://i.imgur.com/GifnqrQ.png">
+<h3>RUTAN KELAS IIB PAINAN</h3>
+<small>Sistem Antrian Kunjungan</small>
+<hr>
+<div>Nomor Antrian</div>
+<div class="antrian">${antrian}</div>
+<hr>
+<b>Nama</b><div>${nama}</div>
+<b>WBP</b><div>${wbp}</div>
+<hr>
+<small>${tanggal}</small><br>
+<small>Harap menunggu panggilan petugas</small>
+</div>
+</body></html>`);
+  w.document.close();
 }
 
 function logout(){
-localStorage.removeItem("login");
-location.href="login.html";
+  localStorage.removeItem("login");
+  location.href="login.html";
 }
 
 loadData();
