@@ -90,6 +90,11 @@ if(localStorage.getItem("login")!=="true"){
 }
 </script>
 
+<!-- 🔔 AUDIO BEL -->
+<audio id="audioBel" preload="auto">
+  <source src="ringtone Hp bell bandara.mp3" type="audio/mpeg">
+</audio>
+
 <div class="header">
   <div class="brand">
     <img src="https://i.imgur.com/GifnqrQ.png">
@@ -106,11 +111,18 @@ if(localStorage.getItem("login")!=="true"){
   <div class="stat"><h3>Selesai</h3><h1 id="selesaiCount">0</h1></div>
 </div>
 
-<div style="display:flex;justify-content:space-between;margin-bottom:12px">
-  <button id="btnSound" onclick="aktifkanSuara()"
-    style="background:#059669;padding:10px 16px;border-radius:10px;font-weight:600">
-    🔊 Aktifkan Suara
-  </button>
+<div style="display:flex;gap:10px;justify-content:space-between;margin-bottom:12px">
+  <div>
+    <button id="btnSound" onclick="aktifkanSuara()"
+      style="background:#059669;padding:10px 16px;border-radius:10px;font-weight:600">
+      🔊 Aktifkan Suara
+    </button>
+
+    <button onclick="pengumumanPelayanan()"
+      style="background:#7c3aed;padding:10px 16px;border-radius:10px;font-weight:600;margin-left:8px">
+      📢 Pengumuman Pelayanan
+    </button>
+  </div>
 
   <select id="voiceType" style="padding:6px;border-radius:6px">
     <option value="female">Wanita</option>
@@ -143,29 +155,81 @@ const API_URL="https://script.google.com/macros/s/AKfycbxMflUwnGdQpbJeO8TDj-y0ZL
 let voicesReady=false;
 let VOICES=[];
 
-speechSynthesis.onvoiceschanged=()=>{ VOICES=speechSynthesis.getVoices(); };
+speechSynthesis.onvoiceschanged=()=>{
+  VOICES = speechSynthesis.getVoices();
+};
 
+// 🔔 BEL PEMBUKA
 function aktifkanSuara(){
-  const u=new SpeechSynthesisUtterance(
-    "Selamat datang di Rumah Tahanan Negara Kelas IIB Painan.,Demi kelancaran dan kenyamanan bersama, kami akan segera memulai layanan antrian.,Silakan memperhatikan layar informasi dan menunggu hingga nomor antrian Anda dipanggil.,Terima kasih atas perhatian dan kerja samanya."
-  );
-  u.lang="id-ID";
-  speechSynthesis.speak(u);
-  voicesReady=true;
-  btnSound.innerText="✅ Suara Aktif";
-  btnSound.disabled=true;
+  const bel=document.getElementById("audioBel");
+  bel.currentTime=0;
+  bel.play();
+
+  setTimeout(()=>{
+    bel.pause();
+    bel.currentTime=0;
+
+    const u=new SpeechSynthesisUtterance(
+      "Mohon Perhatian,..,,Selamat datang di Rumah Tahanan Negara Kelas 2B Painan.Demi kelancaran dan kenyamanan bersama, kami akan segera memulai layanan antrian. Silakan memperhatikan layar informasi dan menunggu hingga nomor antrian Anda dipanggil.Terima kasih atas perhatian dan kerja samanya.."
+    );
+    u.lang="id-ID";
+    u.rate=0.9;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+
+    voicesReady=true;
+    btnSound.innerText="✅ Suara Aktif";
+    btnSound.disabled=true;
+  },5000);
 }
 
-function suara(antrian,nama){
-  if(!voicesReady){ alert("Aktifkan suara terlebih dahulu"); return; }
+// 📢 PENGUMUMAN PELAYANAN (BEL + TEKS)
+function pengumumanPelayanan(){
+  if(!voicesReady){
+    alert("Aktifkan suara terlebih dahulu");
+    return;
+  }
+
+  const bel=document.getElementById("audioBel");
+  bel.currentTime=0;
+  bel.play();
+
+  setTimeout(()=>{
+    bel.pause();
+    bel.currentTime=0;
+
+    let v=VOICES.find(v=>v.lang.includes("id"))||VOICES[0];
+
+    const msg=new SpeechSynthesisUtterance(
+      "Mohon Perhatian. Demi menjaga keamanan dan ketertiban di Rumah Tahanan Negara Kelas 2B Painan, seluruh pengunjung dilarang membawa senjata tajam, narkotika, alat komunikasi, uang tunai, minuman keras, serta barang berbahaya lainnya.,seluruh kawasan lingkungan rutan painan di awasi dengan kamera sisitifi, Mohon patuhi seluruh ketentuan yang berlaku.,, Terima kasih atas kerja samanya."
+    );
+    msg.lang="id-ID";
+    msg.rate=0.85;
+    msg.voice=v;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(msg);
+  },5000);
+}
+
+// 📣 PANGGIL ANTRIAN (TANPA BEL)
+function suara(antrian){
+  if(!voicesReady){
+    alert("Aktifkan suara terlebih dahulu");
+    return;
+  }
+
   let v=VOICES.find(v=>v.lang.includes("id"))||VOICES[0];
+
   const msg=new SpeechSynthesisUtterance(
-    `Nomor antrian ,,,,${antrian},,,, atas nama ${nama}, silakan menuju keruangan PTSP`
+    `Nomor antrian ${antrian}, silakan menuju keruangan ,PTSP`
   );
   msg.lang="id-ID";
   msg.rate=0.85;
   msg.pitch=voiceType.value==="male"?0.8:1.2;
   msg.voice=v;
+
   speechSynthesis.cancel();
   speechSynthesis.speak(msg);
 }
@@ -176,7 +240,6 @@ fetch(API_URL).then(r=>r.json()).then(data=>{
   dataAntrian.innerHTML="";
   data.forEach((x,i)=>{
     t++; if(x.status==="Menunggu") m++; if(x.status==="Selesai") s++;
-
     dataAntrian.innerHTML+=`
 <tr>
 <td>${i+1}</td>
@@ -186,15 +249,12 @@ fetch(API_URL).then(r=>r.json()).then(data=>{
 <td><b>${x.antrian}</b></td>
 <td class="status-${x.status.toLowerCase()}">${x.status}</td>
 <td>
-  ${x.status!=="Selesai" ? `
-    <button onclick="suara('${x.antrian}','${x.nama}')" style="background:#059669">🔊 Panggil</button><br><br>
-    <button onclick="cetakStruk('${x.nama}','${x.wbp}','${x.antrian}','${x.tanggal}')" style="background:#0ea5e9">🧾 Cetak</button><br><br>
-    <button onclick="selesai(${x.id})" style="background:#6b7280">✅ Selesai</button>
-  ` : `
-    <button disabled>🔇 Panggil</button><br><br>
-    <button disabled>🧾 Cetak</button><br><br>
-    <button disabled>Selesai</button>
-  `}
+${x.status!=="Selesai"?`
+<button onclick="suara('${x.antrian}')" style="background:#059669">🔊 Panggil</button><br><br>
+<button onclick="selesai(${x.id})" style="background:#6b7280">✅ Selesai</button>
+`:`
+<button disabled>🔇 Panggil</button><br><br>
+<button disabled>Selesai</button>`}
 </td>
 </tr>`;
   });
@@ -207,37 +267,6 @@ fetch(API_URL).then(r=>r.json()).then(data=>{
 function selesai(row){
   fetch(API_URL,{method:"POST",body:JSON.stringify({action:"selesai",row})})
   .then(()=>loadData());
-}
-
-function cetakStruk(nama,wbp,antrian,tanggal){
-  const w=window.open("","_blank","width=350,height=600");
-  w.document.write(`
-<html><head><title>Struk Antrian</title>
-<style>
-body{font-family:Inter,Arial;text-align:center;margin:0;padding:10px}
-.box{border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.15);padding:16px}
-img{width:70px}
-.antrian{font-size:46px;font-weight:700;margin:10px 0}
-hr{border-top:1px dashed #ccc}
-small{color:#6b7280}
-</style></head>
-<body onload="window.print();window.close()">
-<div class="box">
-<img src="https://i.imgur.com/GifnqrQ.png">
-<h3>RUTAN KELAS IIB PAINAN</h3>
-<small>Sistem Antrian Kunjungan</small>
-<hr>
-<div>Nomor Antrian</div>
-<div class="antrian">${antrian}</div>
-<hr>
-<b>Nama</b><div>${nama}</div>
-<b>WBP</b><div>${wbp}</div>
-<hr>
-<small>${tanggal}</small><br>
-<small>Harap menunggu panggilan petugas</small>
-</div>
-</body></html>`);
-  w.document.close();
 }
 
 function logout(){

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Monitor Antrian | Rutan Kelas IIB Painan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="https://i.imgur.com/GifnqrQ.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(135deg,#0f172a,#1e3a8a);
+  font-family:Inter,sans-serif;
+  color:#fff;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.header{
+  padding:20px;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  background:rgba(0,0,0,.25);
+}
+.header img{width:60px}
+.header h1{
+  font-size:28px;
+  margin:0;
+  font-weight:800;
+}
+
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+.label{
+  font-size:32px;
+  opacity:.85;
+  margin-bottom:10px;
+}
+
+.nomor{
+  font-size:160px;
+  font-weight:800;
+  background:#fff;
+  color:#1e3a8a;
+  padding:30px 80px;
+  border-radius:30px;
+  box-shadow:0 30px 60px rgba(0,0,0,.4);
+  animation:pulse 1.5s infinite;
+}
+
+.nama{
+  margin-top:25px;
+  font-size:40px;
+  font-weight:700;
+}
+
+.footer{
+  text-align:center;
+  padding:15px;
+  font-size:20px;
+  background:rgba(0,0,0,.25);
+}
+
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+  100%{transform:scale(1)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <img src="https://i.imgur.com/GifnqrQ.png">
+  <h1>MONITOR ANTRIAN KUNJUNGAN<br>RUTAN KELAS IIB PAINAN</h1>
+</div>
+
+<div class="main">
+  <div class="label">Nomor Antrian Saat Ini</div>
+  <div class="nomor" id="noAntrian">-</div>
+  <div class="nama" id="namaPemanggil">Silakan menunggu</div>
+</div>
+
+<div class="footer">
+  Mohon memperhatikan layar monitor dan panggilan petugas
+</div>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbxMflUwnGdQpbJeO8TDj-y0ZLvQyiVI8ATmPN_0akcQ9SRRZSbdFYbWKnns3_cIC5gY/exec";
+
+let currentId = null;
+
+function loadMonitor(){
+  fetch(API_URL)
+    .then(r=>r.json())
+    .then(data=>{
+      // Ambil antrian MENUNGGU pertama
+      const next = data.find(x => x.status === "Menunggu");
+
+      if(!next){
+        noAntrian.innerText = "-";
+        namaPemanggil.innerText = "Tidak ada antrian";
+        return;
+      }
+
+      // Jika berubah → update layar
+      if(currentId !== next.id){
+        currentId = next.id;
+        noAntrian.innerText = next.antrian;
+        namaPemanggil.innerText = next.nama;
+      }
+    });
+}
+
+// Load awal & auto refresh
+loadMonitor();
+setInterval(loadMonitor,3000);
+</script>
+
+</body>
+</html>
