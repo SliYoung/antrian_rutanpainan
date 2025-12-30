@@ -150,7 +150,7 @@ if(localStorage.getItem("login")!=="true"){
 </div>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbxMflUwnGdQpbJeO8TDj-y0ZLvQyiVI8ATmPN_0akcQ9SRRZSbdFYbWKnns3_cIC5gY/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbyCoGTPVM2RRzxTve3ik1PQRS78VHYif1-33Lcg8XEKbRdaxOW02JxGGQxmItnNbeE2/exec";
 
 let voicesReady=false;
 let VOICES=[];
@@ -170,7 +170,7 @@ function aktifkanSuara(){
     bel.currentTime=0;
 
     const u=new SpeechSynthesisUtterance(
-      "Mohon Perhatian,..,,Selamat datang di Rumah Tahanan Negara Kelas 2B Painan.Demi kelancaran dan kenyamanan bersama, kami akan segera memulai layanan antrian. Silakan memperhatikan layar informasi dan menunggu hingga nomor antrian Anda dipanggil.Terima kasih atas perhatian dan kerja samanya.."
+      "Mohon perhatian. Selamat datang di Rumah Tahanan Negara Kelas IIB Painan. Layanan antrian akan segera dimulai."
     );
     u.lang="id-ID";
     u.rate=0.9;
@@ -202,7 +202,7 @@ function pengumumanPelayanan(){
     let v=VOICES.find(v=>v.lang.includes("id"))||VOICES[0];
 
     const msg=new SpeechSynthesisUtterance(
-      "Mohon Perhatian. Demi menjaga keamanan dan ketertiban di Rumah Tahanan Negara Kelas 2B Painan, seluruh pengunjung dilarang membawa senjata tajam, narkotika, alat komunikasi, uang tunai, minuman keras, serta barang berbahaya lainnya.,seluruh kawasan lingkungan rutan painan di awasi dengan kamera sisitifi, Mohon patuhi seluruh ketentuan yang berlaku.,, Terima kasih atas kerja samanya."
+      "Perhatian. Demi menjaga keamanan dan ketertiban di Rumah Tahanan Negara Kelas IIB Painan, seluruh pengunjung dilarang membawa senjata tajam, narkotika, alat komunikasi, rokok, minuman keras, serta barang berbahaya lainnya. Mohon patuhi seluruh ketentuan yang berlaku. Terima kasih."
     );
     msg.lang="id-ID";
     msg.rate=0.85;
@@ -223,7 +223,7 @@ function suara(antrian){
   let v=VOICES.find(v=>v.lang.includes("id"))||VOICES[0];
 
   const msg=new SpeechSynthesisUtterance(
-    `Nomor antrian ${antrian}, silakan menuju keruangan ,PTSP`
+    `Nomor antrian ${antrian}, silakan menuju ruang pelayanan PTSP`
   );
   msg.lang="id-ID";
   msg.rate=0.85;
