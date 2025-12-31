@@ -170,7 +170,7 @@ function aktifkanSuara(){
     bel.currentTime=0;
 
     const u=new SpeechSynthesisUtterance(
-      "Mohon perhatian. Selamat datang di Rumah Tahanan Negara Kelas IIB Painan. Layanan antrian akan segera dimulai."
+      "Selamat datang di Rumah Tahanan Negara Kelas 2B Painan.Demi kelancaran dan kenyamanan bersama, kami akan segera memulai layanan antrian.Silakan memperhatikan layar informasi dan menunggu hingga nomor antrian Anda dipanggil.Terima kasih atas perhatian dan kerja samanya."
     );
     u.lang="id-ID";
     u.rate=0.9;
@@ -202,7 +202,7 @@ function pengumumanPelayanan(){
     let v=VOICES.find(v=>v.lang.includes("id"))||VOICES[0];
 
     const msg=new SpeechSynthesisUtterance(
-      "Perhatian. Demi menjaga keamanan dan ketertiban di Rumah Tahanan Negara Kelas IIB Painan, seluruh pengunjung dilarang membawa senjata tajam, narkotika, alat komunikasi, rokok, minuman keras, serta barang berbahaya lainnya. Mohon patuhi seluruh ketentuan yang berlaku. Terima kasih."
+      "Mohon Perhatian. Demi menjaga keamanan dan ketertiban di Rumah Tahanan Negara Kelas 2B Painan, seluruh pengunjung dilarang membawa senjata tajam, narkotika, alat komunikasi, rokok, uang tunai minuman keras, serta barang berbahaya lainnya. Mohon patuhi seluruh ketentuan yang berlaku. Terima kasih."
     );
     msg.lang="id-ID";
     msg.rate=0.85;
@@ -223,7 +223,7 @@ function suara(antrian){
   let v=VOICES.find(v=>v.lang.includes("id"))||VOICES[0];
 
   const msg=new SpeechSynthesisUtterance(
-    `Nomor antrian ${antrian}, silakan menuju ruang pelayanan PTSP`
+    `Nomor antrian ${antrian}, silakan menuju keruangan pelayanan,, PTSP`
   );
   msg.lang="id-ID";
   msg.rate=0.85;
