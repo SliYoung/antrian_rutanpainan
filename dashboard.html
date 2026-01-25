@@ -258,12 +258,13 @@ if(localStorage.getItem("login")!=="true"){
       <button onclick="pengumumanPelayanan()">📢 Pengumuman Pelayanan</button>
       <button onclick="panggilAntrianBerikutnya()">📣 Panggil Antrian Berikutnya</button>
       <button onclick="pengumumanSelesai()">🔔 Pengumuman Selesai</button>
+      <button onclick="resetSemua()" style="background:#ef4444">♻️ Reset Antrian</button>
     </div>
     <select id="voiceType">
       <option value="female">Wanita</option>
       <option value="male">Pria</option>
     </select>
-  </div>
+  </div>  
   <div class="card">
     <h2>Data Antrian Kunjungan</h2>
     <table>
@@ -283,7 +284,7 @@ if(localStorage.getItem("login")!=="true"){
   </div>
 </div>
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbyCoGTPVM2RRzxTve3ik1PQRS78VHYif1-33Lcg8XEKbRdaxOW02JxGGQxmItnNbeE2/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbwxS99FTk8Jp2OP0UJYKnzHRgYb1kTuuJaAUMbD-4Pa8tNP2cVhvCLJxFamqYg1O7TT/exec";
 let voicesReady=false;
 let VOICES=[];
 speechSynthesis.onvoiceschanged=()=>{
@@ -411,11 +412,12 @@ function loadData(){
 <td><b>${x.antrian}</b></td>
 <td class="status-${x.status.toLowerCase()}">${x.status}</td>
 <td>
-${x.status!=="Selesai"?`
+${x.status === "Menunggu" ? `
 <button onclick="suara('${x.antrian}')" style="background:#059669">🔊 Panggil</button><br><br>
 <button onclick="selesai(${x.id})" style="background:#6b7280">✅ Selesai</button>
-`:``
-}
+` : `
+<button onclick="resetSatu(${x.id})" style="background:#f59e0b">♻️ Reset</button>
+`}
 </td>
 </tr>`;
     });
@@ -435,5 +437,23 @@ function logout(){
 loadData();
 setInterval(loadData,5000);
 </script>
+<script>
+  function resetSatu(row){
+    if(!confirm("Reset antrian ini ke MENUNGGU?")) return;
+    fetch(API_URL,{
+      method:"POST",
+      body:JSON.stringify({action:"reset",row})
+    }).then(()=>loadData());
+  }
+  
+  function resetSemua(){
+    if(!confirm("⚠️ Yakin reset SEMUA antrian ke MENUNGGU?")) return;
+    fetch(API_URL,{
+      method:"POST",
+      body:JSON.stringify({action:"resetAll"})
+    }).then(()=>loadData());
+  }
+  </script>
+  
 </body>
 </html>
