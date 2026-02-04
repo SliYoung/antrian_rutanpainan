@@ -5,16 +5,24 @@
 <title>Monitor Antrian | Rutan Kelas IIB Painan</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png" href="https://i.imgur.com/GifnqrQ.png">
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box}
-body{
+html,body{
   margin:0;
+  width:100%;
+  height:100%;
+}
+body{
   background:linear-gradient(135deg,#0f172a,#1e3a8a);
   font-family:Inter,sans-serif;
   color:#fff;
+  overflow:hidden;
+}
+
+/* ===== MONITOR ===== */
+#monitor{
   height:100vh;
   display:flex;
   flex-direction:column;
@@ -45,7 +53,6 @@ body{
 .label{
   font-size:32px;
   opacity:.85;
-  margin-bottom:10px;
 }
 
 .nomor{
@@ -53,9 +60,9 @@ body{
   font-weight:800;
   background:#fff;
   color:#1e3a8a;
-  padding:30px 80px;
+  padding:30px 90px;
   border-radius:30px;
-  box-shadow:0 30px 60px rgba(0,0,0,.4);
+  box-shadow:0 30px 60px rgba(0,0,0,.45);
   animation:pulse 1.5s infinite;
 }
 
@@ -77,56 +84,108 @@ body{
   50%{transform:scale(1.05)}
   100%{transform:scale(1)}
 }
+
+/* ===== VIDEO FULLSCREEN ===== */
+#videoContainer{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:none;
+  z-index:9999;
+}
+#videoContainer video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <img src="https://i.imgur.com/GifnqrQ.png">
-  <h1>MONITOR ANTRIAN KUNJUNGAN<br>RUTAN KELAS IIB PAINAN</h1>
+<!-- ===== MONITOR ANTRIAN ===== -->
+<div id="monitor">
+  <div class="header">
+    <img src="https://i.imgur.com/GifnqrQ.png">
+    <h1>MONITOR ANTRIAN KUNJUNGAN<br>RUTAN KELAS IIB PAINAN</h1>
+  </div>
+
+  <div class="main">
+    <div class="label">Nomor Antrian Saat Ini</div>
+    <div class="nomor" id="noAntrian">-</div>
+    <div class="nama" id="namaPemanggil">Silakan menunggu</div>
+  </div>
+
+  <div class="footer">
+    Mohon memperhatikan layar monitor dan panggilan petugas
+  </div>
 </div>
 
-<div class="main">
-  <div class="label">Nomor Antrian Saat Ini</div>
-  <div class="nomor" id="noAntrian">-</div>
-  <div class="nama" id="namaPemanggil">Silakan menunggu</div>
-</div>
-
-<div class="footer">
-  Mohon memperhatikan layar monitor dan panggilan petugas
+<!-- ===== VIDEO ===== -->
+<div id="videoContainer">
+  <video id="videoInfo" muted playsinline webkit-playsinline>
+    <!-- GANTI VIDEO DI SINI -->
+    <source src="Presentasi Bisnis Makanan Ilustrasi Krem Oranye.mp4" type="video/mp4">
+  </video>
 </div>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbyCoGTPVM2RRzxTve3ik1PQRS78VHYif1-33Lcg8XEKbRdaxOW02JxGGQxmItnNbeE2/exec";
+/* ================== FULLSCREEN ================== */
+function goFullscreen(){
+  const el=document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen();
+  else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if(el.msRequestFullscreen) el.msRequestFullscreen();
+}
+// Klik sekali di mana saja → fullscreen (aturan browser)
+document.addEventListener("click",()=>{
+  if(!document.fullscreenElement) goFullscreen();
+},{once:true});
 
-let currentId = null;
+/* ================== API ANTRIAN ================== */
+const API_URL="https://script.google.com/macros/s/AKfycbyCoGTPVM2RRzxTve3ik1PQRS78VHYif1-33Lcg8XEKbRdaxOW02JxGGQxmItnNbeE2/exec";
+let currentId=null;
 
 function loadMonitor(){
   fetch(API_URL)
     .then(r=>r.json())
     .then(data=>{
-      // Ambil antrian MENUNGGU pertama
-      const next = data.find(x => x.status === "Menunggu");
-
+      const next=data.find(x=>x.status==="Menunggu");
       if(!next){
-        noAntrian.innerText = "-";
-        namaPemanggil.innerText = "Tidak ada antrian";
+        noAntrian.innerText="-";
+        namaPemanggil.innerText="Tidak ada antrian";
         return;
       }
-
-      // Jika berubah → update layar
-      if(currentId !== next.id){
-        currentId = next.id;
-        noAntrian.innerText = next.antrian;
-        namaPemanggil.innerText = next.nama;
+      if(currentId!==next.id){
+        currentId=next.id;
+        noAntrian.innerText=next.antrian;
+        namaPemanggil.innerText=next.nama;
       }
-    });
+    })
+    .catch(()=>{});
 }
-
-// Load awal & auto refresh
 loadMonitor();
 setInterval(loadMonitor,3000);
+
+/* ================== VIDEO TIMER ================== */
+// tampil video tiap X menit
+const INTERVAL_VIDEO = 1 * 60 * 1000; // 1 menit
+const DURASI_VIDEO  = 30 * 1000;     // 30 detik
+
+const videoBox=document.getElementById("videoContainer");
+const video=document.getElementById("videoInfo");
+
+setInterval(()=>{
+  videoBox.style.display="block";
+  video.currentTime=0;
+  video.play().catch(()=>{});
+
+  setTimeout(()=>{
+    video.pause();
+    videoBox.style.display="none";
+  }, DURASI_VIDEO);
+
+}, INTERVAL_VIDEO);
 </script>
 
 </body>
