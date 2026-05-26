@@ -2,81 +2,134 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Monitor Antrian | Rutan Kelas IIB Painan</title>
+<title>Monitor Antrian TV</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/png" href="https://i.imgur.com/GifnqrQ.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
 
 <style>
-*{box-sizing:border-box}
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+
 body{
-  background:linear-gradient(135deg,#0f172a,#1e3a8a);
   font-family:Inter,sans-serif;
+  background:#0b3c5d;
   color:#fff;
   overflow:hidden;
 }
 
-/* ===== MONITOR ===== */
-#monitor{
+.wrapper{
+  width:100vw;
   height:100vh;
   display:flex;
   flex-direction:column;
 }
 
+/* HEADER */
 .header{
-  padding:20px;
+  height:8vh;
   display:flex;
+  justify-content:space-between;
   align-items:center;
-  gap:15px;
-  background:rgba(0,0,0,.25);
-}
-.header img{width:60px}
-.header h1{
-  font-size:28px;
-  margin:0;
-  font-weight:800;
+  padding:0 30px;
+  background:#0a2c44;
+  font-size:1.2vw;
 }
 
+.time{font-weight:700}
+
+/* MAIN */
 .main{
   flex:1;
+  display:flex;
+}
+
+/* KIRI */
+.left{
+  width:50%;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
 }
 
-.label{
-  font-size:32px;
-  opacity:.85;
+.loket{
+  font-size:3vw;
+  font-weight:800;
 }
 
-.nomor{
-  font-size:160px;
-  font-weight:800;
+.nomor-box{
+  margin-top:2vh;
   background:#fff;
-  color:#1e3a8a;
-  padding:30px 90px;
-  border-radius:30px;
-  box-shadow:0 30px 60px rgba(0,0,0,.45);
+  color:#0b3c5d;
+  padding:3vh 5vw;
+  border-radius:2vw;
+  font-size:8vw;
+  font-weight:800;
   animation:pulse 1.5s infinite;
 }
 
-.nama{
-  margin-top:25px;
-  font-size:40px;
-  font-weight:700;
+/* KANAN VIDEO */
+.right{
+  width:50%;
+  padding:1vw;
 }
 
-.footer{
+.video{
+  width:100%;
+  height:100%;
+  background:#000;
+  border-radius:1vw;
+  overflow:hidden;
+}
+
+.video video{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+/* BOTTOM */
+.bottom{
+  height:12vh;
+  display:flex;
+  background:#0a2c44;
+}
+
+.loket-item{
+  flex:1;
   text-align:center;
-  padding:15px;
-  font-size:20px;
-  background:rgba(0,0,0,.25);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  font-size:1.2vw;
+  border-right:1px solid rgba(255,255,255,.1);
+}
+
+.loket-item b{
+  font-size:2vw;
+  color:#ffcc00;
+}
+
+/* RUNNING TEXT */
+.running{
+  height:5vh;
+  background:#ffcc00;
+  color:#000;
+  display:flex;
+  align-items:center;
+  font-size:1.2vw;
+  font-weight:700;
+  overflow:hidden;
+}
+
+.marquee{
+  white-space:nowrap;
+  animation:jalan 20s linear infinite;
+}
+
+@keyframes jalan{
+  0%{transform:translateX(100%)}
+  100%{transform:translateX(-100%)}
 }
 
 @keyframes pulse{
@@ -84,108 +137,145 @@ body{
   50%{transform:scale(1.05)}
   100%{transform:scale(1)}
 }
-
-/* ===== VIDEO FULLSCREEN ===== */
-#videoContainer{
-  position:fixed;
-  inset:0;
-  background:black;
-  display:none;
-  z-index:9999;
-}
-#videoContainer video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
 </style>
 </head>
 
 <body>
 
-<!-- ===== MONITOR ANTRIAN ===== -->
-<div id="monitor">
-  <div class="header">
-    <img src="https://i.imgur.com/GifnqrQ.png">
-    <h1>MONITOR ANTRIAN KUNJUNGAN<br>RUTAN KELAS IIB PAINAN</h1>
+<div class="wrapper">
+
+<!-- HEADER -->
+<div class="header">
+  <div>MONITOR ANTRIAN RUTAN IIB PAINAN</div>
+  <div class="time" id="jam">--:--:--</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="left">
+    <div class="loket">No - Antrian</div>
+    <div class="nomor-box" id="noAntrian">000</div>
   </div>
 
-  <div class="main">
-    <div class="label">Nomor Antrian Saat Ini</div>
-    <div class="nomor" id="noAntrian">-</div>
-    <div class="nama" id="namaPemanggil">Silakan menunggu</div>
+  <div class="right">
+    <div class="video">
+      <video autoplay muted loop>
+        <source src="iduladha.mp4" type="video/mp4">
+         <source src="Di antara banyaknya keistimewaan Ramadan, Kiki hanya menantikan satu hal.mp4" type="video/mp4">
+      </video>
+    </div>
   </div>
+  
 
-  <div class="footer">
-    Mohon memperhatikan layar monitor dan panggilan petugas
+</div>
+
+<!-- PETUGAS -->
+<div class="bottom">
+  <div class="loket-item"><span>PETUGAS 1</span><b id="p1">-</b></div>
+  <div class="loket-item"><span>PETUGAS 2</span><b id="p2">-</b></div>
+  <div class="loket-item"><span>PETUGAS 3</span><b id="p3">-</b></div>
+  <div class="loket-item"><span>PETUGAS 4</span><b id="p4">-</b></div>
+  <div class="loket-item"><span>PETUGAS 5</span><b id="p5">-</b></div>
+</div>
+
+<!-- RUNNING TEXT -->
+<div class="running">
+  <div class="marquee">
+    Selamat datang di layanan kunjungan Rutan Kelas IIB Painan • Harap mengikuti aturan • Terima kasih
   </div>
 </div>
 
-<!-- ===== VIDEO ===== -->
-<div id="videoContainer">
-  <video id="videoInfo" muted playsinline webkit-playsinline>
-    <!-- GANTI VIDEO DI SINI -->
-    <source src="Presentasi Bisnis Makanan Ilustrasi Krem Oranye.mp4" type="video/mp4">
-  </video>
 </div>
 
 <script>
-/* ================== FULLSCREEN ================== */
-function goFullscreen(){
-  const el=document.documentElement;
-  if(el.requestFullscreen) el.requestFullscreen();
-  else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-  else if(el.msRequestFullscreen) el.msRequestFullscreen();
+// ================= API =================
+const API_ANTRIAN="https://script.google.com/macros/s/AKfycbyCoGTPVM2RRzxTve3ik1PQRS78VHYif1-33Lcg8XEKbRdaxOW02JxGGQxmItnNbeE2/exec";
+const API_PETUGAS="https://script.google.com/macros/s/AKfycbzTUoCWMYBuD3QRLG1B_YryV1fdhupLNdtFGQrP4_MI6uhYDA91Th1QSKgvgnB1sfRQ/exec";
+
+// ================= JAM =================
+function updateJam(){
+  document.getElementById("jam").innerText =
+    new Date().toLocaleTimeString("id-ID");
 }
-// Klik sekali di mana saja → fullscreen (aturan browser)
-document.addEventListener("click",()=>{
-  if(!document.fullscreenElement) goFullscreen();
-},{once:true});
 
-/* ================== API ANTRIAN ================== */
-const API_URL="https://script.google.com/macros/s/AKfycbyCoGTPVM2RRzxTve3ik1PQRS78VHYif1-33Lcg8XEKbRdaxOW02JxGGQxmItnNbeE2/exec";
-let currentId=null;
-
-function loadMonitor(){
-  fetch(API_URL)
-    .then(r=>r.json())
-    .then(data=>{
-      const next=data.find(x=>x.status==="Menunggu");
-      if(!next){
-        noAntrian.innerText="-";
-        namaPemanggil.innerText="Tidak ada antrian";
-        return;
-      }
-      if(currentId!==next.id){
-        currentId=next.id;
-        noAntrian.innerText=next.antrian;
-        namaPemanggil.innerText=next.nama;
-      }
-    })
-    .catch(()=>{});
+// ================= ANTRIAN =================
+function loadAntrian(){
+  fetch(API_ANTRIAN)
+  .then(res=>res.json())
+  .then(data=>{
+    const next = data.find(x=>x.status==="Menunggu");
+    if(next){
+      noAntrian.innerText = next.antrian;
+    }else{
+      noAntrian.innerText = "-";
+    }
+  });
 }
-loadMonitor();
-setInterval(loadMonitor,3000);
 
-/* ================== VIDEO TIMER ================== */
-// tampil video tiap X menit
-const INTERVAL_VIDEO = 1 * 60 * 1000; // 1 menit
-const DURASI_VIDEO  = 30 * 1000;     // 30 detik
+// ================= PETUGAS FIX FINAL =================
+function loadPetugas(){
+  fetch(API_PETUGAS)
+  .then(res=>res.json())
+  .then(data=>{
 
-const videoBox=document.getElementById("videoContainer");
-const video=document.getElementById("videoInfo");
+    const now = new Date();
 
-setInterval(()=>{
-  videoBox.style.display="block";
-  video.currentTime=0;
-  video.play().catch(()=>{});
+    const today =
+      now.getFullYear() + "-" +
+      String(now.getMonth()+1).padStart(2,'0') + "-" +
+      String(now.getDate()).padStart(2,'0');
 
-  setTimeout(()=>{
-    video.pause();
-    videoBox.style.display="none";
-  }, DURASI_VIDEO);
+    console.log("Hari ini:", today);
 
-}, INTERVAL_VIDEO);
+    const jadwal = data.find(x => {
+      const tglAPI = String(x.tanggal).slice(0,10); // 🔥 FIX UTAMA
+      console.log("Banding:", tglAPI, "==", today);
+      return tglAPI === today;
+    });
+
+    if(jadwal){
+      console.log("✅ DATA KETEMU");
+
+      document.getElementById("p1").innerText = jadwal.loket1 || "-";
+      document.getElementById("p2").innerText = jadwal.loket2 || "-";
+      document.getElementById("p3").innerText = jadwal.loket3 || "-";
+      document.getElementById("p4").innerText = jadwal.loket4 || "-";
+      document.getElementById("p5").innerText = jadwal.loket5 || "-";
+
+    }else{
+      console.log("❌ DATA TIDAK ADA");
+
+      document.getElementById("p1").innerText = "-";
+      document.getElementById("p2").innerText = "-";
+      document.getElementById("p3").innerText = "-";
+      document.getElementById("p4").innerText = "-";
+      document.getElementById("p5").innerText = "-";
+    }
+
+  })
+  .catch(err=>{
+    console.log("ERROR:", err);
+  });
+}
+
+// ================= FULLSCREEN =================
+function openFullscreen(){
+  if(document.documentElement.requestFullscreen){
+    document.documentElement.requestFullscreen();
+  }
+}
+document.body.onclick = openFullscreen;
+
+// ================= INIT =================
+setInterval(updateJam,1000);
+setInterval(loadAntrian,3000);
+setInterval(loadPetugas,5000);
+
+updateJam();
+loadAntrian();
+loadPetugas();
+
 </script>
 
 </body>
